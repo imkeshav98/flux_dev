@@ -1,5 +1,6 @@
 from io import BytesIO
 import torch
+import time
 import litserve as ls
 from diffusers import FluxPipeline
 from PIL import Image
@@ -14,32 +15,19 @@ class FluxLitAPI(ls.LitAPI):
         )
 
     def decode_request(self, request):
-        # Extract and validate parameters from the request
-        try:
-            prompt = request.get("prompt", "")
-            height = int(request.get("height", 1024))
-            width = int(request.get("width", 1024))
-            guidance_scale = float(request.get("guidance_scale", 3.5))
-            num_inference_steps = int(request.get("num_inference_steps", 50))
-            max_sequence_length = int(request.get("max_sequence_length", 512))
-            seed = int(request.get("seed", 0))
-        except ValueError as e:
-            raise ValueError(f"Invalid parameter value: {e}")
-        return (
-            prompt, height, width, guidance_scale,
-            num_inference_steps, max_sequence_length, seed
-        )
+        # Extract prompt from request
+        prompt = request["prompt"]
+        return prompt
 
-    def predict(self, prompt, height, width, guidance_scale, num_inference_steps, max_sequence_length, seed):
+    def predict(self, prompt):
         # Generate image using the Flux pipeline
-        generator = torch.Generator("cpu").manual_seed(seed)
+        generator = torch.Generator().manual_seed(int(time.time()))
         image = self.pipe(
             prompt=prompt,
-            height=height,
-            width=width,
-            guidance_scale=guidance_scale,
-            num_inference_steps=num_inference_steps,
-            max_sequence_length=max_sequence_length,
+            height=1024,
+            width=1024,
+            guidance_scale=30,
+            num_inference_steps=28,
             generator=generator
         ).images[0]
         return image
