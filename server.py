@@ -1,9 +1,9 @@
 from io import BytesIO
 import torch
-from litserve import ls
+import litserve as ls
 from diffusers import FluxPipeline
 from PIL import Image
-from starlette.responses import Response
+from fastapi import Response
 
 class FluxLitAPI(ls.LitAPI):
     def setup(self, device):
