@@ -21,10 +21,6 @@ def initialize_model():
         )
         pipe.to("cuda")  # Move model to GPU
 
-@app.before_first_request
-def setup():
-    initialize_model()
-
 @app.route("/generate", methods=["POST"])
 def generate_image():
     try:
