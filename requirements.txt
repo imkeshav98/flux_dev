@@ -1,5 +1,9 @@
 litserve
 diffusers
+transformers
+sentencepiece
+protobuf
+accelerate
 torch
 Pillow
 requests
