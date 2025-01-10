@@ -1,0 +1,6 @@
+litserve
+diffusers
+torch
+Pillow
+requests
+huggingface_hub
